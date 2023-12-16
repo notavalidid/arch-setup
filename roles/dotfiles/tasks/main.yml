@@ -1,10 +1,8 @@
 ---
 
 - name: Install rcm
-  pacman:
-    name: rcm
-    state: present
-    executable: paru
+  become: false
+  command: 'paru -S rcm --noconfirm'
 
 - name: Clone user dotfiles
   ansible.builtin.git:

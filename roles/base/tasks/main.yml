@@ -12,15 +12,44 @@
     shell: "{{ user.shell }}"
     groups:
       - "{{ user.group }}"
-      - wheel
-      - network
+      - audio
       - lock
+      - lp
+      - network
+      - power
+      - rfkill
       - uucp
+      - sys
+      - video
+      - wheel
     append: true
     system: false
     createhome: true
     home: /home/{{ user.name }}
   when: user.name is defined
+
+- name: Ensure the .ssh directory exists
+  become_user: '{{ user.name }}'
+  file:
+    path: '/home/{{ user.name }}/.ssh'
+    state: directory
+    owner: '{{ user.name }}'
+    group: '{{ user.group }}'
+    mode: '0700'
+
+- name: Ensure the existence of a SSH keypair
+  become_user: '{{ user.name }}'
+  openssh_keypair:
+    path: '/home/{{ user.name }}/.ssh/id_rsa'
+
+- name: Ensure the required hidden directories exist
+  become_user: '{{ user.name }}'
+  file:
+    path: '/home/{{ user.name }}/.config'
+    state: directory
+    owner: '{{ user.name }}'
+    group: '{{ user.group }}'
+    mode: '0755'
 
 - name: Pacman mirrorlist setup
   ansible.builtin.copy:
@@ -52,7 +81,16 @@
     dest: "/home/{{ user.name }}/paru"
     update: true
 
-- name: Build and install yay
+- name: Change permission of paru directory
+  file:
+    path: "/home/{{ user.name }}/paru"
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    mode: '1777'
+
+- name: Build and install paru
+  become: true
+  become_user: "{{ user.name }}"
   command:
     chdir: "/home/{{ user.name }}/paru"
     cmd: "makepkg -sfi --noconfirm"

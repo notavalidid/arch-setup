@@ -2,7 +2,7 @@
 #  User Configuration   #
 #=======================#
 user:
-    name: miguel
+    name: mush
     group: users
     shell: /bin/zsh
 
@@ -53,6 +53,9 @@ dotfiles:
 #   Packages   #
 #==============#
 network_packages:
+    - alsa-utils
+    - bluez
+    - bluez-utils
     - dhcpcd
     - ethtool
     - iputils
@@ -69,6 +72,11 @@ network_packages:
 base_packages:
     - base-devel
     - cronie
+    - dmenu
+    - i3-gaps
+    - i3status
+    - lightdm
+    - lightdm-slick-greeter
     - openssh
     - rkhunter
     - zsh
