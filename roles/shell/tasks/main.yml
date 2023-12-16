@@ -1,0 +1,60 @@
+---
+- name: Clone oh-my-zsh for users
+  become: yes
+  become_user: '{{ user.name }}'
+  git:
+    repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
+    version: master
+    dest: '~/.oh-my-zsh'
+
+- name: Set permissions of oh-my-zsh
+  become: true
+  file:
+    path: '~{{ user.name }}/.oh-my-zsh'
+    mode: 'go-w'
+
+- name: Clone powerlevel10k.
+  git:
+    repo: 'https://github.com/romkatv/powerlevel10k.git'
+    dest: "~{{ user.name }}/.oh-my-zsh/custom/themes/powerlevel10k"
+
+- name: Clone zsh-autosuggestions for users
+  become: yes
+  become_user: '{{ user.name }}'
+  git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    version: master
+    dest: '~{{ user.name }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions'
+
+- name: Clone zsh-syntax-highlighting for users
+  become: yes
+  become_user: '{{ user.name }}'
+  git:
+    repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+    version: master
+    dest: '~{{ user.name }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting'
+
+- name: Write .zshrc for user
+  become: yes
+  template:
+    src: .zshrc.j2
+    dest: '~{{ user.name }}/.zshrc'
+    backup: true
+    mode: 'u=rw,go=r'
+    group: '{{ user.group }}'
+    owner: '{{ user.name }}'
+
+- name: Ensure the cache folder with oh-my-zsh subfolder is present
+  ansible.builtin.file:
+    path: /home/{{ user.name }}/.cache/oh-my-zsh
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    state: directory
+    mode: 0755
+
+- name: Ensure the last working dir file for oh-my-zsh is present
+  ansible.builtin.file:
+    path: /home/{{ user.name }}/.cache/oh-my-zsh/last-working-dir
+    owner: "{{ user.name }}"
+    group: "{{ user.group }}"
+    state: touch

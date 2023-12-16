@@ -1,0 +1,22 @@
+---
+
+- name: Install rcm
+  pacman:
+    name: rcm
+    state: present
+    executable: paru
+
+- name: Clone user dotfiles
+  ansible.builtin.git:
+    repo: "{{ dotfiles.url }}"
+    dest: /home/{{ user.name }}/{{ dotfiles.destination }}
+    accept_hostkey: true
+    update: true
+    force: true
+  become: true
+  become_user: "{{ user.name }}"
+
+- name: Install user dotfiles
+  ansible.builtin.command: "rcup -d /home/{{ user.name }}/{{ dotfiles.destination }} {{ dotfiles.rcup_flags }}"
+  become: true
+  become_user: "{{ user.name }}"
