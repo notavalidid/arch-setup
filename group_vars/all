@@ -1,15 +1,16 @@
-#======================#
-#  User Configuration  #
-#======================#
-
+#=======================#
+#  User Configuration   #
+#=======================#
 user:
-    name: mush
+    name: miguel
     group: users
     shell: /bin/zsh
 
-#=========================#
-#   System configuration  #
-# ========================#
+
+
+#==========================#
+#   System configuration   #
+#==========================#
 # processor type:
 #   Option: "intel" will install microcode updates and configure the bootloader accordingly
 #   Option: "amd" will do the same for amd
@@ -18,7 +19,6 @@ user:
 #   Option: "amd" will install amd drivers
 #   Option: "nvidia" will install nouveau because i will NEVER EVER touch those filthy nvidia drivers
 #                    if you wan't proprietary drivers follow the steps documented in the arch wiki.
-##
 system:
     locale: en_US.UTF-8
     timezone: Europe/Lisbon
@@ -26,6 +26,32 @@ system:
     graphics_card: nvidia
     macspoof: disabled
 
+
+
+#================================#
+#   Connectivity configuration   #
+#================================#
+ssh:
+    port: 22
+    enable_sshd: true
+
+
+
+#===========================#
+#   Dotfile configuration   #
+#===========================#
+# Choose wheter custom dotfiles should be installed or not
+# Just set the installation flag to false to avoid an installation
+dotfiles:
+    url: https://github.com/notavalidid/dotfiles.git
+    destination: .dotfiles
+    rcup_flags: -fx README.md
+
+
+
+#==============#
+#   Packages   #
+#==============#
 network_packages:
     - dhcpcd
     - ethtool
@@ -39,3 +65,23 @@ network_packages:
     - nmap
     - traceroute
     - wpa_supplicant
+
+base_packages:
+    - base-devel
+    - cronie
+    - openssh
+    - rkhunter
+    - zsh
+    - htop
+    - nmap
+    - curl
+    - tmux
+    - git
+    - rsync
+    - coreutils
+    - dateutils
+    - bc
+    - strace
+    - lsof
+    - sysstat
+    - tig

@@ -6,13 +6,10 @@
   become: true
 
   roles:
-    - { role: network, tags: ['network'] }
-    - { role: base, tags: ['base'] }
-      #- { role: firewall, tags: ['firewall'] }
-      #- { role: grub, tags: ['grub'], when: "bootloader == 'grub'"}
-      #- { role: syslinux, tags: ['syslinux'], when: "bootloader == 'syslinux'"}
-      #- { role: dotfiles, tags: ['dotfiles'] }
-      #- { role: shell, tags: ['shell'] }
+    #- { role: network, tags: ['network'] }
+    #- { role: base, tags: ['base'] }
+    - { role: dotfiles, tags: ['dotfiles'] }
+    - { role: shell, tags: ['shell'] }
       #- { role: editor, tags: ['editor'] }
       #- { role: terminal, tags: ['terminal'] }
       #- { role: windowmanager, tags: ['windowmanager'] }
