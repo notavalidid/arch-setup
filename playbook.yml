@@ -1,0 +1,23 @@
+---
+
+- name: Install Arch Linux Environment
+  hosts: hosts
+  connection: local
+  become: true
+
+  roles:
+    - { role: network, tags: ['network'] }
+    - { role: base, tags: ['base'] }
+      #- { role: firewall, tags: ['firewall'] }
+      #- { role: grub, tags: ['grub'], when: "bootloader == 'grub'"}
+      #- { role: syslinux, tags: ['syslinux'], when: "bootloader == 'syslinux'"}
+      #- { role: dotfiles, tags: ['dotfiles'] }
+      #- { role: shell, tags: ['shell'] }
+      #- { role: editor, tags: ['editor'] }
+      #- { role: terminal, tags: ['terminal'] }
+      #- { role: windowmanager, tags: ['windowmanager'] }
+      #- { role: browsers, tags: ['browsers'] }
+      #- { role: bluetooth, tags: ['bluetooth'] }
+      #- { role: calibre, tags: ['calibre'] }
+      #- { role: redshift, tags: ['redshift'] }
+      #- { role: keepass, tags: ['keepass'] }

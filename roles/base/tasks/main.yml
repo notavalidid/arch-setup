@@ -1,0 +1,128 @@
+---
+
+- name: Ensure group user.group exists
+  ansible.builtin.group:
+    name: "{{ user.group }}"
+    state: present
+  when: user.name is defined
+
+- name: Ensure the user user.name exists
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    shell: "{{ user.shell }}"
+    groups:
+      - "{{ user.group }}"
+      - wheel
+      - network
+      - lock
+      - uucp
+    append: true
+    system: false
+    createhome: true
+    home: /home/{{ user.name }}
+  when: user.name is defined
+
+- name: Pacman mirrorlist setup
+  ansible.builtin.copy:
+    src: mirrorlist
+    dest: /etc/pacman.d/
+
+- name: Pacman config setup
+  ansible.builtin.copy:
+    src: pacman.conf
+    dest: /etc/
+
+- name: Update pacman package cache
+  pacman:
+    update_cache: true
+
+- name: Perform full system upgrade
+  pacman:
+    update_cache: true
+    upgrade: true
+
+- name: Install base packages
+  pacman:
+    name: "{{ base_packages }}"
+    state: present
+
+- name: Clone paru
+  git:
+    repo: https://aur.archlinux.org/paru.git
+    dest: "/home/{{ user.name }}/paru"
+    update: true
+
+- name: Build and install yay
+  command:
+    chdir: "/home/{{ user.name }}/paru"
+    cmd: "makepkg -sfi --noconfirm"
+    creates: /usr/bin/paru
+
+- name: Install microcode updates for intel (if necessary)
+  pacman:
+    name: intel-ucode
+    state: present
+  register: task_result
+  until: task_result is success
+  retries: 10
+  delay: 2
+  notify:
+    - update grub
+    - update syslinux
+  when: system.processor == "intel"
+
+- name: Install microcode updates for amd (if necessary)
+  pacman:
+    name: amd-ucode
+    state: present
+  register: task_result
+  until: task_result is success
+  retries: 10
+  delay: 2
+  notify:
+    - update grub
+    - update syslinux
+  when: system.processor == "amd"
+
+- name: Enable cronie server
+  ansible.builtin.service: name=cronie state=started enabled=true
+
+- name: Ensure the correct timezone is set
+  community.general.timezone:
+    name: '{{ system.timezone }}'
+
+- name: Ensure the correct locale is set
+  community.general.locale_gen:
+    name: '{{ system.locale }}'
+
+- name: Install NTP daemon
+  pacman: name=ntp state=present
+
+- name: Configure time with Observatorio Astronomico de Lisboa clock
+  copy:
+    src: ntp.conf
+    dest: /etc/
+  notify: restart ntpd
+
+- name: Make sure ntpd is stopped
+  service:
+    name: ntpd
+    state: stopped
+    enabled: true
+
+- name: Sync time with Observatório ntp clock
+  command: ntpdate ntp02.oal.ul.pt
+
+- name: Sync hwclock
+  command: hwclock --systohc
+
+- name: Ensure the desired system services are enabled and started
+  service:
+    name: '{{ item }}'
+    state: started
+    enabled: true
+  loop:
+    - bluetooth
+    - cronie
+    - NetworkManager
+    - ntpd

@@ -1,0 +1,41 @@
+#======================#
+#  User Configuration  #
+#======================#
+
+user:
+    name: mush
+    group: users
+    shell: /bin/zsh
+
+#=========================#
+#   System configuration  #
+# ========================#
+# processor type:
+#   Option: "intel" will install microcode updates and configure the bootloader accordingly
+#   Option: "amd" will do the same for amd
+# graphics_card type: 
+#   Option: "intel" will install intel graphics drivers
+#   Option: "amd" will install amd drivers
+#   Option: "nvidia" will install nouveau because i will NEVER EVER touch those filthy nvidia drivers
+#                    if you wan't proprietary drivers follow the steps documented in the arch wiki.
+##
+system:
+    locale: en_US.UTF-8
+    timezone: Europe/Lisbon
+    processor: amd
+    graphics_card: nvidia
+    macspoof: disabled
+
+network_packages:
+    - dhcpcd
+    - ethtool
+    - iputils
+    - netctl
+    - net-tools
+    - networkmanager
+    - network-manager-applet
+    - networkmanager-openconnect
+    - networkmanager-openvpn
+    - nmap
+    - traceroute
+    - wpa_supplicant
