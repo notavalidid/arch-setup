@@ -1,0 +1,10 @@
+---
+- name: Install fonts
+  pacman:
+    name: '{{ font_packages }}'
+    state: present
+
+- name: Install i3 windowmanager and components
+  pacman:
+    name: '{{ wm_packages }}'
+    state: present

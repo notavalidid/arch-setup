@@ -6,13 +6,13 @@
   become: true
 
   roles:
-    - { role: network, tags: ['network'] }
-    - { role: base, tags: ['base'] }
-    - { role: dotfiles, tags: ['dotfiles'] }
-    - { role: shell, tags: ['shell'] }
-      #- { role: editor, tags: ['editor'] }
-      #- { role: terminal, tags: ['terminal'] }
-      #- { role: windowmanager, tags: ['windowmanager'] }
+    #- { role: network, tags: ['network'] }
+    #- { role: base, tags: ['base'] }
+    #- { role: dotfiles, tags: ['dotfiles'] }
+    #- { role: shell, tags: ['shell'] }
+    - { role: editor, tags: ['editor'] }
+    - { role: terminal, tags: ['terminal'] }
+    - { role: windowmanager, tags: ['windowmanager'] }
       #- { role: browsers, tags: ['browsers'] }
       #- { role: bluetooth, tags: ['bluetooth'] }
       #- { role: calibre, tags: ['calibre'] }

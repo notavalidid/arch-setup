@@ -1,0 +1,6 @@
+---
+- name: Install Alacritty terminal emulator
+  pacman: name=alacritty state=present
+
+- name: Install Tmux terminal multiplexer
+  pacman: name=tmux state=present
